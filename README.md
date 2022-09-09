@@ -7,12 +7,12 @@ docker login
 
 To build image:
 ```bash
-docker build -t nrmancuso/idea-docker:latest .
+docker build -t nrmancuso/idea-docker:latest -t nrmancuso/idea-docker:1.0.0 .
 ```
 
 To push a new tag:
 ```bash
-docker push nrmancuso/idea-docker:latest nrmancuso/idea-docker:1.0.0
+docker push nrmancuso/idea-docker:latest
 ```
 
 To run in interactive mode:
