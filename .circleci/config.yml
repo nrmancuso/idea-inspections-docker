@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  build:
+    environment:
+      APP_NAME: idea-docker
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/$APP_NAME.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/$APP_NAME.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build --cache-from=app -t app .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/APP_NAME.tar app
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name:
+          command: |
+            docker build -t nrmancuso/idea-docker:latest .
+#      - deploy:
+#          name: Push application Docker image
+#          command: |
+#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+#              login="$(aws ecr get-login)"
+#              ${login}
+#              docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+#              docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+#            fi
+
+workflows:
+  build:
+    jobs:
+      - build
