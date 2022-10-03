@@ -5,7 +5,7 @@ LABEL maintainer="Nick Mancuso https://github.com/nrmancuso"
 RUN sudo apt update && sudo apt install -y wget
 
 # ENV is transferred to container
-ENV IDEA_VERSION="ideaIC-2022.2.1"
+ENV IDEA_VERSION="ideaIC-2022.2.2"
 ENV IDEA_PATH="/home/circleci/idea"
 ENV PATH="${PATH}:${IDEA_PATH}/bin"
 
